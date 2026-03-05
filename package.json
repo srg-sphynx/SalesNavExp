@@ -1,0 +1,46 @@
+{
+  "name": "linkedin-scraper",
+  "productName": "LinkedIn Scraper",
+  "version": "3.1.0",
+  "description": "A modern Mac app for scraping LinkedIn Sales Navigator leads",
+  "author": "LinkedIn Scraper",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder --mac",
+    "build:dmg": "electron-builder --mac dmg"
+  },
+  "build": {
+    "appId": "com.linkedinscraper.app",
+    "productName": "LinkedIn Scraper",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icon.png"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "frontend/dist/**/*",
+      "lib/**/*",
+      "assets/**/*",
+      "credentials.json"
+    ],
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "dependencies": {
+    "playwright": "^1.40.0",
+    "googleapis": "^130.0.0",
+    "electron-store": "^8.1.0"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  }
+}

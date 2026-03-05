@@ -1,0 +1,51 @@
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Node modules
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+frontend/dist/
+build/
+
+# Electron builder cache + temp
+.cache/
+out/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# App data
+userData/
+*.json.bak
+
+# Credentials (never commit)
+credentials.json
+client_secret*.json
+token.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# env
+.env
+.env.local
+.env.*
+
+# Output CSV files
+output/

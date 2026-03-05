@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com">
+    <title>LinkedIn Scraper V3</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="design-tokens.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- App Shell -->
+    <div class="app-shell">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="app-logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="8" fill="url(#gradient)" />
+                        <path
+                            d="M10 16C10 13.79 11.79 12 14 12H16V14H14C12.9 14 12 14.9 12 16C12 17.1 12.9 18 14 18H16V20H14C11.79 20 10 18.21 10 16Z"
+                            fill="white" />
+                        <path
+                            d="M18 12H16V14H18C19.1 14 20 14.9 20 16C20 17.1 19.1 18 18 18H16V20H18C20.21 20 22 18.21 22 16C22 13.79 20.21 12 18 12Z"
+                            fill="white" />
+                        <path d="M14 15H18V17H14V15Z" fill="white" />
+                        <defs>
+                            <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
+                                <stop stop-color="#0A66C2" />
+                                <stop offset="1" stop-color="#6366F1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="app-name">Scraper</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-view="dashboard">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    <span>Dashboard</span>
+                </button>
+
+                <button class="nav-item" data-view="scrape">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                    </svg>
+                    <span>New Scrape</span>
+                </button>
+
+                <button class="nav-item" data-view="history">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span>History</span>
+                </button>
+
+                <button class="nav-item" data-view="files">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>Files</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item" data-view="settings">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <section class="view active" id="dashboard-view">
+                <header class="view-header">
+                    <h1>Dashboard</h1>
+                    <button class="btn btn-primary" id="quick-scrape-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                        </svg>
+                        Quick Scrape
+                    </button>
+                </header>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="total-leads">0</span>
+                            <span class="stat-label">Total Leads</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                                <polyline points="17 6 23 6 23 12" />
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="weekly-leads">0</span>
+                            <span class="stat-label">This Week</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="avg-speed">0</span>
+                            <span class="stat-label">Avg Speed/min</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="total-files">0</span>
+                            <span class="stat-label">Saved Files</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card recent-activity">
+                        <div class="card-header">
+                            <h3>Recent Activity</h3>
+                        </div>
+                        <div class="card-content" id="recent-activity-list">
+                            <div class="empty-state">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M12 6v6l4 2" />
+                                </svg>
+                                <p>No recent activity</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card quick-actions">
+                        <div class="card-header">
+                            <h3>Quick Actions</h3>
+                        </div>
+                        <div class="card-content">
+                            <button class="action-btn" id="open-folder-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                                </svg>
+                                Open Output Folder
+                            </button>
+                            <button class="action-btn" id="open-logs-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg>
+                                View Logs
+                            </button>
+                            <button class="action-btn" id="drive-sync-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
+                                </svg>
+                                <span id="drive-status-text">Connect Drive</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scrape View -->
+            <section class="view" id="scrape-view">
+                <header class="view-header">
+                    <h1>New Scrape</h1>
+                </header>
+
+                <div class="scrape-wizard">
+                    <div class="wizard-step active" id="step-1">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Launch Browser</h3>
+                            <p>Open Chrome with remote debugging enabled</p>
+                            <button class="btn btn-primary btn-lg" id="launch-chrome-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <circle cx="12" cy="12" r="4" />
+                                    <line x1="21.17" y1="8" x2="12" y2="8" />
+                                    <line x1="3.95" y1="6.06" x2="8.54" y2="14" />
+                                    <line x1="10.88" y1="21.94" x2="15.46" y2="14" />
+                                </svg>
+                                Launch Chrome
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="wizard-step" id="step-2">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Navigate to Sales Navigator</h3>
+                            <p>Go to your leads search page and apply filters</p>
+                            <div class="input-group">
+                                <label for="leads-url">Search URL (optional)</label>
+                                <input type="text" id="leads-url"
+                                    placeholder="https://www.linkedin.com/sales/search/...">
+                            </div>
+                            <div class="input-group">
+                                <label for="list-name">List Name</label>
+                                <input type="text" id="list-name" placeholder="My Leads List">
+                            </div>
+                            <button class="btn btn-primary" id="ready-btn">I'm Ready to Scrape</button>
+                        </div>
+                    </div>
+
+                    <div class="wizard-step" id="step-3">
+                        <div class="step-number">3</div>
+                        <div class="step-content progress-step">
+                            <h3>Scraping in Progress</h3>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="scrape-progress"></div>
+                                </div>
+                                <div class="progress-stats">
+                                    <span><strong id="leads-scraped">0</strong> leads scraped</span>
+                                    <span><strong id="scrape-speed">0</strong> per minute</span>
+                                </div>
+                            </div>
+                            <div class="scrape-actions">
+                                <button class="btn btn-secondary" id="stop-btn">Stop & Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wizard-step" id="step-complete">
+                        <div class="step-number success">✓</div>
+                        <div class="step-content">
+                            <h3>Scraping Complete!</h3>
+                            <p id="complete-message">Successfully scraped 0 leads</p>
+                            <div class="complete-actions">
+                                <button class="btn btn-primary" id="open-file-btn">Open File</button>
+                                <button class="btn btn-secondary" id="save-drive-btn">Save to Drive</button>
+                                <button class="btn btn-ghost" id="new-scrape-btn">New Scrape</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History View -->
+            <section class="view" id="history-view">
+                <header class="view-header">
+                    <h1>History</h1>
+                </header>
+                <div class="history-list" id="history-list">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 6v6l4 2" />
+                        </svg>
+                        <p>No scraping history yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Files View -->
+            <section class="view" id="files-view">
+                <header class="view-header">
+                    <h1>Saved Files</h1>
+                </header>
+                <div class="files-grid" id="files-list">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                        </svg>
+                        <p>No saved files</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings View -->
+            <section class="view" id="settings-view">
+                <header class="view-header">
+                    <h1>Settings</h1>
+                </header>
+
+                <div class="settings-container">
+                    <div class="settings-group">
+                        <h3>Appearance</h3>
+                        <div class="setting-row">
+                            <label>Theme</label>
+                            <select id="theme-select" class="select">
+                                <option value="dark">Dark</option>
+                                <option value="light">Light</option>
+                                <option value="paper">Paper White</option>
+                                <option value="sepia">Sepia</option>
+                                <option value="system">System</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Output</h3>
+                        <div class="setting-row">
+                            <label>Save Location</label>
+                            <div class="input-with-btn">
+                                <input type="text" id="output-dir" readonly placeholder="Select folder...">
+                                <button class="btn btn-secondary" id="browse-folder-btn">Browse</button>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <label>CSV Separator</label>
+                            <select id="csv-separator" class="select">
+                                <option value=",">Comma (,)</option>
+                                <option value=";">Semicolon (;)</option>
+                                <option value="\t">Tab</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Scraping</h3>
+                        <div class="setting-row">
+                            <label>Max leads per scrape</label>
+                            <input type="number" id="max-leads" min="1" max="1000" value="200" class="input-number">
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Google Drive</h3>
+                        <div class="setting-row">
+                            <label id="drive-email-label">Not connected</label>
+                            <button class="btn btn-secondary" id="drive-connect-btn">Connect</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+                        <button class="btn btn-ghost" id="reset-settings-btn">Reset to Defaults</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
