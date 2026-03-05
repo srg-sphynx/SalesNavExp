@@ -2,41 +2,112 @@
 
 <img src="docs/screenshots/hero-banner.png" alt="SalesNavExp — LinkedIn Sales Navigator Scraper" width="100%" />
 
+# SalesNavExp — LinkedIn Sales Navigator Scraper
+
+### A powerful macOS desktop app for extracting leads from LinkedIn Sales Navigator
+
+[![Version](https://img.shields.io/badge/version-3.1.0-blue?style=flat-square)](https://github.com/srg-sphynx/SalesNavExp/releases)
+[![Platform](https://img.shields.io/badge/platform-macOS%20Apple%20Silicon-black?style=flat-square&logo=apple)](https://github.com/srg-sphynx/SalesNavExp/releases)
+[![Built with Electron](https://img.shields.io/badge/built%20with-Electron%2028-47848F?style=flat-square&logo=electron)](https://electronjs.org)
+[![Built with Antigravity](https://img.shields.io/badge/AI-Antigravity%20%2B%20Claude%20Sonnet%204.5-blueviolet?style=flat-square)](https://github.com/srg-sphynx/SalesNavExp)
+
 </div>
 
-<br/>
-
-<div align="center">
+---
 
 > [!WARNING]
-> **Experimental software** — not affiliated with LinkedIn Corporation, not notarized by Apple. Use at your own risk and discretion. Not recommended for misuse.
+> **⚠️ EXPERIMENTAL SOFTWARE — READ BEFORE USING**
+>
+> This is an **independent experiment** and a personal side project. It is:
+> - **NOT affiliated with LinkedIn Corporation** in any way
+> - **NOT notarized by Apple** (you may see a security warning on first launch)
+> - **NOT endorsed, authorized, or supported** by LinkedIn or any of its partners
+>
+> Usage of this tool may violate [LinkedIn's User Agreement](https://www.linkedin.com/legal/user-agreement) and [Terms of Service](https://www.linkedin.com/legal/l/tos). You are solely responsible for how you use this tool.
+>
+> **Use at your own risk. Not recommended for misuse, commercial exploitation, or scraping at scale.**
+>
+> The author(s) accept no liability for any account suspension, data issues, or legal consequences arising from use of this software.
 
-</div>
+---
 
-<br/>
+## ✨ Features at a Glance
 
-## Why SalesNavExp?
+<table>
+<tr>
+<td width="50%" valign="top">
 
-Extracting leads from LinkedIn Sales Navigator manually is slow, error-prone, and doesn't scale. SalesNavExp automates the entire flow inside a native macOS desktop app — no browser extensions, no cloud middleman, no subscription. Just launch your browser, point it at a search, and let it run.
+### 🖥️ Native macOS Experience
+- Vibrancy + blur effects — feels native on Mac
+- Traffic light window controls
+- System-aware dark/light mode
+- titlebar hidden-inset style (no chrome border)
+- Sidebar + main content layout familiar to macOS users
 
-<br/>
+### ⚡ Smart Scraping Engine
+- Connects to your **Chrome, Firefox, Brave, or Edge** browser via CDP (remote debugging)
+- Scrapes LinkedIn Sales Navigator search result pages
+- Extracts **Name + Profile URL** with high precision
+- Human-like delays between leads (configurable 500ms–10s)
+- Real-time progress with leads/min speed indicator
+- **Stop & Save** at any point — partial results are never lost
 
-<div align="center">
+</td>
+<td width="50%" valign="top">
 
-| | Feature | Details |
-|---|---|---|
-| 🌐 | **Multi-Browser Support** | Chrome, Firefox, Brave, Edge — auto-detected, one-click launch |
-| ⚡ | **Real-time Scraping** | Live progress, leads/min speed, stop & save at any point |
-| 📊 | **Analytics Dashboard** | 14-day lead trend, weekly bar chart, session stats |
-| 📋 | **Smart History** | Sessions grouped by day, search, file-missing detection |
-| ☁️ | **Google Drive Sync** | Upload CSV directly to Drive after each scrape |
-| ⚙️ | **Fully Configurable** | Delays, max leads, CSV format, output folder, theme |
-| 🧠 | **About Dialog** | Dynamic chip detection (Apple M4 Pro · 16 GB), version info |
-| 🖥️ | **Native macOS Feel** | Vibrancy, traffic lights, dark/light mode, hidden titlebar |
+### 🌐 Multi-Browser Support *(V3.1)*
+- Auto-detects installed browsers on your system
+- Supports **Google Chrome**, **Firefox**, **Brave**, **Microsoft Edge**
+- Each browser gets its own isolated profile for clean sessions
+- One-click launch into LinkedIn Sales Navigator
 
-</div>
+### 📊 Analytics Dashboard
+- Total leads scraped across all sessions
+- Average leads per scrape session
+- Total time invested in scraping
+- 14-day daily lead trend chart (Recharts)
+- Weekly bar chart summary
+- Recent sessions quick-access list
 
-<br/>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 📁 File & History Management
+- All scrapes saved as clean, properly-formatted **CSV** files
+- Download folder organized under `LinkedIn Scraper/`
+- Full scrape history with timestamps and lead counts
+- Sessions grouped by **Today / Yesterday / date** *(V3.1)*
+- **Clear History** with confirmation dialog *(V3.1)*
+- **File-missing detection** — shows badge if CSV was moved/deleted *(V3.1)*
+- One-click reveal in Finder
+
+### ☁️ Google Drive Integration
+- Direct upload to Google Drive after each scrape
+- OAuth2 authentication with your Google account
+- Requires `credentials.json` from Google Cloud Console
+
+</td>
+<td width="50%" valign="top">
+
+### ⚙️ Configurable Settings
+- Custom output directory (or default `~/Downloads/LinkedIn Scraper/`)
+- Max leads per session (1–2000)
+- Delay between leads (ms) — balance speed vs. safety
+- CSV separator selection (comma / semicolon / tab)
+- Timestamp in filename toggle
+- Auto-open file in Finder after scrape
+- Light / Dark / System theme
+
+### ℹ️ About & Transparency *(V3.1)*
+- About dialog shows: built by, AI model, system chip
+- Dynamic chip detection (e.g., **Apple M4 Pro · 16 GB**)
+- Version displayed in sidebar and about screen
+
+</td>
+</tr>
+</table>
 
 ---
 
@@ -46,21 +117,21 @@ Extracting leads from LinkedIn Sales Navigator manually is slow, error-prone, an
 <tr>
 <td align="center" width="50%">
   <img src="docs/screenshots/dashboard.png" alt="Dashboard" width="100%" />
-  <br/><sub><b>📊 Analytics Dashboard</b> — leads trend, weekly summary, quick actions</sub>
+  <br/><sub><b>📊 Analytics Dashboard</b> — total leads, trend charts, quick actions</sub>
 </td>
 <td align="center" width="50%">
   <img src="docs/screenshots/history.png" alt="History" width="100%" />
-  <br/><sub><b>📋 History</b> — scrape sessions grouped by date, search, reveal in Finder</sub>
+  <br/><sub><b>📋 History Page</b> — sessions grouped by date, search, reveal in Finder</sub>
 </td>
 </tr>
 <tr>
 <td align="center" width="50%">
-  <img src="docs/screenshots/new-scrape.png" alt="New Scrape" width="100%" />
-  <br/><sub><b>⚡ Scrape Flow</b> — browser picker, configure, live progress, complete</sub>
+  <img src="docs/screenshots/scrape-complete.png" alt="Scrape Complete" width="100%" />
+  <br/><sub><b>✅ Scrape Complete</b> — leads count, open file, upload to Drive</sub>
 </td>
 <td align="center" width="50%">
-  <img src="docs/screenshots/scrape-complete.png" alt="Scrape Complete" width="100%" />
-  <br/><sub><b>✅ Scrape Complete</b> — leads saved, open file or push to Google Drive</sub>
+  <img src="docs/screenshots/new-scrape.png" alt="New Scrape" width="100%" />
+  <br/><sub><b>⚡ New Scrape Flow</b> — step-by-step guided process</sub>
 </td>
 </tr>
 </table>
@@ -71,46 +142,62 @@ Extracting leads from LinkedIn Sales Navigator manually is slow, error-prone, an
 
 ### Requirements
 
-| | Requirement |
+| Requirement | Details |
 |---|---|
-| 🍎 | macOS 12 Monterey or later (Apple Silicon / arm64) |
-| 🔗 | LinkedIn Sales Navigator active subscription |
-| 🌐 | Chrome, Firefox, Brave, or Edge installed |
-| 🟢 | Node.js v18+ *(only if building from source)* |
+| **macOS** | 12 Monterey or later (arm64 / Apple Silicon) |
+| **LinkedIn Sales Navigator** | Active subscription required |
+| **Browser** | Chrome, Firefox, Brave, or Edge installed |
+| **Node.js** | v18+ (only if building from source) |
 
 ---
 
-### Option A — Download the DMG *(Recommended)*
+### Option A — Download the DMG (Recommended)
 
-1. Head to [**Releases →**](https://github.com/srg-sphynx/SalesNavExp/releases)
+1. Go to [**Releases →**](https://github.com/srg-sphynx/SalesNavExp/releases)
 2. Download `LinkedIn Scraper-3.1.0-arm64.dmg`
 3. Open the DMG and drag the app to **Applications**
 
-> **Seeing "App is damaged" or "unidentified developer"?** This is expected — the app is not notarized by Apple.
+> **⚠️ "App is damaged" or "unidentified developer" warning?**
+> This is expected — the app is **not notarized by Apple**. To bypass:
 
-**Fix via Terminal:**
+**Option 1 — Right-click to open:**
+```
+Right-click → Open → Open (in dialog)
+```
+
+**Option 2 — Remove quarantine via Terminal:**
 ```bash
 xattr -cr "/Applications/LinkedIn Scraper.app"
 ```
-Or: right-click the app → **Open** → **Open** in the dialog.
+
+**Option 3 — System Settings:**
+```
+System Settings → Privacy & Security → Allow apps from: Anywhere
+```
+(Then re-enable it after opening the app.)
 
 ---
 
 ### Option B — Build from Source
 
 ```bash
-# Clone
+# 1. Clone the repo
 git clone https://github.com/srg-sphynx/SalesNavExp.git
 cd SalesNavExp
 
-# Install dependencies
+# 2. Install root dependencies (Electron + scraper)
 npm install
-cd frontend && npm install && npm run build && cd ..
 
-# Run
+# 3. Install and build the frontend
+cd frontend
+npm install
+npm run build
+cd ..
+
+# 4. Start the app in dev mode
 npm start
 
-# Package DMG
+# 5. (Optional) Package as DMG
 npm run build:dmg
 ```
 
@@ -118,19 +205,59 @@ npm run build:dmg
 
 ## 🕹️ How to Use
 
-```
-1. Open app → New Scrape
-2. Select your browser (Chrome / Firefox / Brave / Edge)
-3. Click Launch — browser opens to linkedin.com/sales
-4. Log in and navigate to your Sales Navigator search or list
-5. Back in the app: set list name + max leads → Start Scraping
-6. Watch real-time progress — navigate away freely, it keeps running
-7. On completion: Open File (CSV) or Upload to Google Drive
-```
+### Step 1 — Launch a Browser
+
+The app opens your browser in **remote debug mode** on port 9222. This lets the scraper connect to it without needing a browser extension.
+
+1. Open the app → go to **New Scrape**
+2. Select your preferred browser from the picker (Chrome, Firefox, Brave, Edge)
+3. Click **Launch [Browser]**
+
+> The browser will open to `linkedin.com/sales`
 
 ---
 
-## 📄 Output Format
+### Step 2 — Navigate to Your List
+
+In the launched browser:
+1. Log into LinkedIn Sales Navigator
+2. Navigate to your **search results** or **saved list**
+3. Ensure the results are visible on screen
+
+---
+
+### Step 3 — Configure & Start
+
+Back in the app:
+1. *(Optional)* Paste the Sales Navigator URL (or leave blank to scrape the current page)
+2. Give your list a name (e.g., `"SaaS Founders Mar 2026"`)
+3. Set max leads limit
+4. Click **Start Scraping →**
+
+The scraper will page through results automatically.
+
+---
+
+### Step 4 — Monitor Progress
+
+While scraping:
+- See live lead count and **leads/min** speed
+- The sidebar shows **"Active Scrape"** with a pulsing green dot
+- Navigate away freely — scraping continues in the background
+- Click **Stop & Save** at any time to save partial results
+
+---
+
+### Step 5 — Access Your Results
+
+When complete:
+- Click **Open File** to reveal the CSV in Finder
+- Click **Save to Drive** to upload directly to Google Drive
+- View all past sessions in the **History** tab
+
+---
+
+## 📄 CSV Output Format
 
 ```csv
 Name,LinkedIn Profile URL
@@ -138,84 +265,121 @@ Jane Smith,https://www.linkedin.com/in/janesmith
 John Doe,https://www.linkedin.com/in/johndoe
 ```
 
-Saved to `~/Downloads/LinkedIn Scraper/` with a timestamp in the filename by default.
+Files are saved to `~/Downloads/LinkedIn Scraper/` by default with a timestamp in the filename:
+```
+SaaS_Founders_Mar_2026_2026-03-05T09-15-32.csv
+```
 
 ---
 
-## ☁️ Google Drive Setup *(Optional)*
+## ☁️ Google Drive Setup (Optional)
 
-1. Create a project in [Google Cloud Console](https://console.cloud.google.com/)
-2. Enable the **Google Drive API**
-3. Create **OAuth 2.0 Desktop** credentials → download `credentials.json`
-4. Right-click the app → Show Package Contents → `Contents/` → paste `credentials.json`
-5. App → **Settings → Integrations → Connect Google Drive**
+To enable one-click Drive uploads:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project
+3. Enable the **Google Drive API**
+4. Create **OAuth 2.0 credentials** for a "Desktop app"
+5. Download the `credentials.json` file
+6. Place the file in the app bundle:
+   ```
+   Right-click LinkedIn Scraper.app → Show Package Contents
+   → Contents/ → paste credentials.json here
+   ```
+7. In the app, go to **Settings → Integrations → Connect Google Drive**
+8. Complete the browser-based OAuth flow
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Technical Architecture
 
 ```
 SalesNavExp/
-├── main.js              ← Electron main — IPC handlers, browser launch, file I/O
-├── preload.js           ← Context bridge (renderer ↔ main)
+├── main.js              # Electron main process — all IPC handlers, browser launch, file I/O
+├── preload.js           # Context bridge — secure renderer ↔ main API
 ├── lib/
-│   ├── scraper.js       ← Playwright CDP scraping engine
-│   └── googleDrive.js   ← Google Drive OAuth2 + upload
-└── frontend/            ← React 19 + Vite 7 + Tailwind 3
-    └── src/
-        ├── pages/       ← Dashboard, ScrapePage, HistoryPage, FilesPage, SettingsPage
-        ├── components/  ← Sidebar, AboutModal, shadcn/ui primitives
-        └── contexts/    ← ScrapeContext (global scrape state)
+│   ├── scraper.js       # Playwright-based scraping engine (CDP connect)
+│   └── googleDrive.js   # Google Drive OAuth2 + upload
+├── frontend/            # React + Vite + Tailwind frontend
+│   └── src/
+│       ├── pages/
+│       │   ├── Dashboard.jsx     # Stats + charts
+│       │   ├── ScrapePage.jsx    # Browser picker + scrape flow
+│       │   ├── HistoryPage.jsx   # Session history + clear
+│       │   ├── FilesPage.jsx     # Recent CSV files
+│       │   └── SettingsPage.jsx  # All settings + Drive
+│       ├── components/
+│       │   ├── Sidebar.jsx       # Nav with active scrape indicator
+│       │   ├── AboutModal.jsx    # macOS-style About dialog
+│       │   └── ui/               # shadcn/ui components
+│       └── contexts/
+│           └── ScrapeContext.jsx # Global scrape state
+└── build/
+    └── icon.png         # App icon
 ```
 
-| Layer | Tech |
+**Stack:**
+| Layer | Technology |
 |---|---|
 | Shell | Electron 28 |
 | Frontend | React 19 + Vite 7 |
 | Styling | Tailwind CSS 3 + shadcn/ui |
 | Charts | Recharts |
-| Scraping | Playwright (CDP / remote debug) |
+| Scraping | Playwright (CDP) |
 | Cloud | Google Drive API v3 |
-| Packaging | electron-builder (APFS DMG) |
+| Packaging | electron-builder |
 
 ---
 
 ## 🔧 Troubleshooting
 
-| Problem | Fix |
+| Problem | Solution |
 |---|---|
-| `"Chrome debug port not available"` | Click **Launch Browser** first and wait for it to fully open |
-| `"No leads found"` | Navigate to a Sales Navigator **search results** page first |
-| Browser not in picker | Browser not installed at the standard `/Applications/` path |
-| "File missing" badge in History | CSV was moved or deleted from disk — history record remains |
-| Drive connection timeout | Re-check `credentials.json` placement, then retry |
-| `"App is damaged"` | Run `xattr -cr "/Applications/LinkedIn Scraper.app"` in Terminal |
+| `"Chrome debug port not available"` | Click **Launch Browser** first, wait for it to fully open |
+| `"No leads found on the page"` | Navigate to a Sales Navigator **search results** page |
+| App says "File missing" in History | The CSV was moved or deleted from disk — history record remains |
+| Browser doesn't appear in the picker | Browser is not installed at the standard macOS Applications path |
+| Google Drive connection timeout | Re-check `credentials.json` placement and try reconnecting |
+| `"App is damaged"` on launch | Run `xattr -cr "/Applications/LinkedIn Scraper.app"` in Terminal |
 
 ---
 
-## ⚠️ Legal Disclaimer
+## ⚠️ Legal Disclaimer & Responsible Use
 
-This is an **independent experiment** for educational purposes.
+This tool is provided **for educational and experimental purposes only**.
 
 - **Not affiliated with LinkedIn Corporation.** LinkedIn® is a registered trademark of LinkedIn Corporation.
-- **Not notarized by Apple.** Not submitted to or approved by Apple.
-- **May violate LinkedIn's ToS.** Scraping may breach [LinkedIn's User Agreement](https://www.linkedin.com/legal/user-agreement). Account suspension is a real risk.
-- **No warranty.** Provided "as is". Author is not liable for any consequences.
-- **Do not misuse.** Must not be used for spam, harassment, data resale, or any unlawful purpose.
-- **Use reasonable delays.** Aggressive scraping risks IP blocks and CAPTCHA.
+- **Not notarized by Apple.** This app has not been submitted to or approved by Apple.
+- **Use at your own risk.** Scraping LinkedIn may violate their [Terms of Service](https://www.linkedin.com/legal/user-agreement). Your account may be restricted or suspended.
+- **Do not misuse.** This tool must not be used for spam, harassment, data resale, or any unlawful purpose.
+- **No warranty.** This software is provided "as is" without any warranty. The author is not liable for any damages arising from its use.
+- **Rate limiting.** Always use human-like delays. Aggressive scraping can trigger CAPTCHA, IP blocks, or account restrictions.
 
-> By using this software you accept full responsibility for any consequences.
+> By using this software you agree that you have read and understood these terms.
+
+---
+
+## 👤 Built By
+
+**Reddy** — [@srg-sphynx](https://github.com/srg-sphynx)
+
+Built with:
+- **[Antigravity](https://github.com/)** — AI-assisted development platform
+- **Claude Sonnet 4.5** — AI pair programmer
+- **Electron + React** — the best combo for macOS desktop apps that don't feel like a website
 
 ---
 
 ## 📜 License
 
-Personal, non-commercial use only. All rights reserved. Redistribution requires permission.
+This project is released for **personal, non-commercial use only**. No formal OSS license is applied. All rights reserved by the author. Redistribution without permission is not allowed.
 
 ---
 
 <div align="center">
 
-*SalesNavExp v3.1.0 — Powered by Antigravity + Claude Sonnet 4.5*
+**⭐ Star this repo if you found it useful — it keeps the project alive!**
+
+*Made with ❤️ and lots of ☕ — SalesNavExp v3.1.0*
 
 </div>
