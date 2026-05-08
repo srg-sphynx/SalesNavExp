@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('api', {
     // Files
     getRecentFiles: () => ipcRenderer.invoke('get-recent-files'),
     openFile: (filepath) => ipcRenderer.invoke('open-file', filepath),
+    checkFileExists: (filepath) => ipcRenderer.invoke('check-file-exists', filepath),
     openOutputFolder: () => ipcRenderer.invoke('open-output-folder'),
 
     // Logs
@@ -25,6 +26,7 @@ contextBridge.exposeInMainWorld('api', {
 
     // System info (for About dialog)
     getSystemInfo: () => ipcRenderer.invoke('get-system-info'),
+    getAppVersion: () => ipcRenderer.invoke('get-app-version'),
 
     // Browser management
     detectBrowsers: () => ipcRenderer.invoke('detect-browsers'),

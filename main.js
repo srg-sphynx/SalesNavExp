@@ -362,25 +362,28 @@ async function saveLeadsToFile(leads, listName, isPartial = false) {
 
     const filepath = path.join(outputDir, filename);
 
-    // Create clean CSV with proper formatting - Name and URL only
-    const headers = ['Name', 'LinkedIn Profile URL'];
+    const headers = ['Name', 'Title', 'Company', 'Location', 'LinkedIn Profile URL'];
     const sep = settings.csvSeparator || ',';
 
     const csvRows = [
         headers.join(sep),
         ...leads.map(lead => {
-            const name = cleanName(lead.name);
-            const url = cleanUrl(lead.profileUrl);
-
-            // Escape fields if they contain separator or quotes
             const escape = (str) => {
-                if (str.includes(sep) || str.includes('"') || str.includes('\n')) {
-                    return `"${str.replace(/"/g, '""')}"`;
+                if (!str) return '';
+                const s = String(str);
+                if (s.includes(sep) || s.includes('"') || s.includes('\n')) {
+                    return `"${s.replace(/"/g, '""')}"`;
                 }
-                return str;
+                return s;
             };
 
-            return [escape(name), escape(url)].join(sep);
+            return [
+                escape(cleanName(lead.name)),
+                escape(lead.title),
+                escape(lead.company),
+                escape(lead.location),
+                escape(cleanUrl(lead.profileUrl))
+            ].join(sep);
         })
     ];
 
@@ -451,6 +454,18 @@ ipcMain.handle('open-logs-folder', async () => {
     await ensureLogsDir();
     shell.openPath(LOGS_DIR);
 });
+
+ipcMain.handle('check-file-exists', async (event, filepath) => {
+    if (!filepath) return { exists: false };
+    try {
+        await fs.access(filepath);
+        return { exists: true };
+    } catch {
+        return { exists: false };
+    }
+});
+
+ipcMain.handle('get-app-version', () => app.getVersion());
 
 // Google Drive handlers
 ipcMain.handle('drive-status', async () => {
@@ -678,6 +693,7 @@ ipcMain.handle('start-scraping', async (event, options) => {
 
         const leads = await scrapeLeadsWithProgress(page, {
             maxLeads: options.maxLeads || settings.maxLeadsPerScrape || 200,
+            delayBetweenLeads: settings.delayBetweenLeads || 1500,
             onProgress: (progress) => {
                 lastScrapeStats = progress; // Update session memory
                 mainWindow.webContents.send('scrape-progress', progress);

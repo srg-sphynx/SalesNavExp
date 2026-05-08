@@ -1,7 +1,7 @@
 {
   "name": "linkedin-scraper",
   "productName": "LinkedIn Scraper",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "A modern Mac app for scraping LinkedIn Sales Navigator leads",
   "author": "LinkedIn Scraper",
   "main": "main.js",
