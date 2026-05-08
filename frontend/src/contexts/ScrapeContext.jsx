@@ -137,12 +137,28 @@ export function ScrapeProvider({ children }) {
         window.api.startScraping({ ...form, maxLeads: Number(form.maxLeads) || 200 })
             .then((result) => {
                 if (result && !result.success && result.error && !result.partialSave) {
-                    setScrapeState(s => ({ ...s, active: false, step: 2, error: result.error }))
+                    setScrapeState(s => ({
+                        ...s,
+                        active: false,
+                        step: 2,
+                        error: result.error,
+                        url: form.url || s.url,
+                        listName: form.listName || s.listName,
+                        maxLeads: form.maxLeads || s.maxLeads,
+                    }))
                     toast.error(`❌ ${result.error}`, { duration: 10000 })
                 }
             })
             .catch((err) => {
-                setScrapeState(s => ({ ...s, active: false, step: 2, error: err?.message || "Unknown error" }))
+                setScrapeState(s => ({
+                    ...s,
+                    active: false,
+                    step: 2,
+                    error: err?.message || "Unknown error",
+                    url: form.url || s.url,
+                    listName: form.listName || s.listName,
+                    maxLeads: form.maxLeads || s.maxLeads,
+                }))
                 toast.error(`❌ Scraping failed: ${err?.message || "Unknown error"}`, { duration: 10000 })
             })
     }, [])

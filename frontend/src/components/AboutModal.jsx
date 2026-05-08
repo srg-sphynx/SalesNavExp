@@ -9,10 +9,12 @@ import { Link2, Cpu, Info } from "lucide-react"
 
 export function AboutModal({ open, onClose }) {
     const [sysInfo, setSysInfo] = useState(null)
+    const [version, setVersion] = useState(null)
 
     useEffect(() => {
         if (open) {
             window.api.getSystemInfo?.().then(setSysInfo).catch(() => { })
+            window.api.getAppVersion?.().then(setVersion).catch(() => { })
         }
     }, [open])
 
@@ -35,7 +37,7 @@ export function AboutModal({ open, onClose }) {
                         <DialogTitle className="text-xl font-bold tracking-tight text-center">
                             LinkedIn Scraper
                         </DialogTitle>
-                        <p className="text-center text-sm text-muted-foreground font-medium">Version 3.1.0</p>
+                        <p className="text-center text-sm text-muted-foreground font-medium">Version {version ?? "3.1.0"}</p>
                     </DialogHeader>
 
                     {/* Chip info */}

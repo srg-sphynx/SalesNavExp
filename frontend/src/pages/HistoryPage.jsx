@@ -191,8 +191,8 @@ function HistoryRow({ item }) {
 
     useEffect(() => {
         if (item.filepath) {
-            window.api.openFile(item.filepath)
-                .then(res => setFileState(res.found ? "exists" : "missing"))
+            window.api.checkFileExists(item.filepath)
+                .then(res => setFileState(res.exists ? "exists" : "missing"))
                 .catch(() => setFileState("missing"))
         }
     }, [item.filepath])
