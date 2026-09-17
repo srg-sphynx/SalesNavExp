@@ -18,20 +18,18 @@ export function ThemeProvider({
 
     useEffect(() => {
         const root = window.document.documentElement
+        const media = window.matchMedia("(prefers-color-scheme: dark)")
 
-        root.classList.remove("light", "dark")
-
-        if (theme === "system") {
-            const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-                .matches
-                ? "dark"
-                : "light"
-
-            root.classList.add(systemTheme)
-            return
+        const apply = () => {
+            root.classList.remove("light", "dark")
+            root.classList.add(theme === "system" ? (media.matches ? "dark" : "light") : theme)
         }
 
-        root.classList.add(theme)
+        apply()
+        // Follow macOS appearance changes live when set to "system"
+        if (theme !== "system") return
+        media.addEventListener("change", apply)
+        return () => media.removeEventListener("change", apply)
     }, [theme])
 
     const value = {

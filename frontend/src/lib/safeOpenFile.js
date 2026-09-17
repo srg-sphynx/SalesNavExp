@@ -7,10 +7,11 @@ import { toast } from "sonner"
 export async function safeOpenFile(filepath) {
     if (!filepath) {
         toast.error("No file path provided.")
-        return
+        return { found: false }
     }
     const res = await window.api.openFile(filepath)
     if (res && res.found === false) {
         toast.error(res.error || "File not found — it may have been moved or deleted.")
     }
+    return res
 }

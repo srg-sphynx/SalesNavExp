@@ -50,7 +50,7 @@ export function Sidebar() {
                         <Link2 className="w-4 h-4" />
                     </div>
                     <h1 className="font-semibold text-base bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600 truncate">
-                        Scraper V3.1
+                        LinkedIn Scraper
                     </h1>
                 </div>
 
@@ -85,7 +85,7 @@ export function Sidebar() {
 
                 {/* Footer */}
                 <div className="p-4 border-t flex-shrink-0 flex items-center justify-between">
-                    <p className="text-xs text-muted-foreground">v3.1.0</p>
+                    <p className="text-xs text-muted-foreground">v{__APP_VERSION__}</p>
                     <button
                         onClick={() => setAboutOpen(true)}
                         className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded"

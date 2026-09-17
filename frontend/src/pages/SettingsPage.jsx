@@ -27,11 +27,6 @@ export default function SettingsPage() {
     const [saved, setSaved] = useState(false)
     const [resetting, setResetting] = useState(false)
 
-    useEffect(() => {
-        loadSettings()
-        checkDriveStatus()
-    }, [])
-
     const loadSettings = async () => {
         try {
             const data = await window.api.getSettings()
@@ -52,6 +47,11 @@ export default function SettingsPage() {
             setDriveStatus({ connected: false, email: null })
         }
     }
+
+    useEffect(() => {
+        loadSettings()
+        checkDriveStatus()
+    }, [])
 
     const handleSave = async () => {
         try {
@@ -260,7 +260,7 @@ export default function SettingsPage() {
                             {/* Setup hint when not connected */}
                             {!driveStatus.connected && !driveError && (
                                 <p className="text-xs text-muted-foreground px-1">
-                                    Requires a <code className="bg-muted px-1 py-0.5 rounded text-xs">credentials.json</code> from Google Cloud Console placed in the app's resources folder.
+                                    Requires a Desktop-app OAuth <code className="bg-muted px-1 py-0.5 rounded text-xs">credentials.json</code> from Google Cloud Console, placed in <code className="bg-muted px-1 py-0.5 rounded text-xs">~/Library/Application Support/LinkedIn Scraper/</code>. Tokens are stored in your macOS Keychain.
                                 </p>
                             )}
                         </CardContent>
