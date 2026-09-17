@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -12,7 +12,10 @@ import {
     FolderOpen, File, Activity
 } from "lucide-react"
 import { useScrape } from "@/contexts/ScrapeContext"
-import { toast } from "sonner"
+import { safeOpenFile } from "@/lib/safeOpenFile"
+
+// Stats dates are local YYYY-MM-DD keys; parse them as local midnight, not UTC
+const parseDateKey = (key) => new Date(`${key}T00:00:00`)
 
 // Custom tooltip for charts
 function ChartTooltip({ active, payload, label }) {
@@ -42,25 +45,6 @@ export default function Dashboard() {
     const [history, setHistory] = useState([])
     const [recentFiles, setRecentFiles] = useState([])
 
-    const safeOpenFile = useCallback(async (filepath) => {
-        if (!filepath) return
-        const res = await window.api.openFile(filepath)
-        if (res && res.found === false) {
-            toast.error(res.error || "File not found — it may have been moved or deleted.")
-        }
-    }, [])
-
-    useEffect(() => {
-        loadAll()
-    }, [])
-
-    // Refresh stats when a scrape completes
-    useEffect(() => {
-        if (!scrapeState.active && scrapeState.step === 4) {
-            loadAll()
-        }
-    }, [scrapeState.active, scrapeState.step])
-
     const loadAll = async () => {
         try {
             const [statsData, historyData, filesData] = await Promise.all([
@@ -76,12 +60,12 @@ export default function Dashboard() {
                 avgLeadsPerScrape: s.totalScrapes > 0 ? Math.round(s.totalLeadsScraped / s.totalScrapes) : 0,
                 totalTime: Math.round((s.totalTimeSeconds || 0) / 60),
                 dailyStats: (s.dailyStats || []).slice(-14).map(d => ({
-                    date: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                    date: parseDateKey(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                     leads: d.leads,
                     scrapes: d.scrapes,
                 })),
                 weeklyStats: (s.weeklyStats || []).slice(-8).map(w => ({
-                    week: new Date(w.week).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                    week: parseDateKey(w.week).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                     leads: w.leads,
                     scrapes: w.scrapes,
                 })),
@@ -92,6 +76,11 @@ export default function Dashboard() {
             console.error("Dashboard load error:", err)
         }
     }
+
+    // Load on mount and refresh when a scrape finishes
+    useEffect(() => {
+        if (!scrapeState.active) loadAll()
+    }, [scrapeState.active, scrapeState.step])
 
     const statCards = [
         {
@@ -257,7 +246,7 @@ export default function Dashboard() {
                                 <div className="space-y-1">
                                     {history.slice(0, 6).map((item, i) => (
                                         <div
-                                            key={i}
+                                            key={item.id || i}
                                             className="flex items-center justify-between py-2 px-2 hover:bg-muted/50 rounded-lg cursor-pointer transition-colors"
                                             onClick={() => safeOpenFile(item.filepath)}
                                         >

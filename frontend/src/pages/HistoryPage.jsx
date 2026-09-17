@@ -45,10 +45,6 @@ export default function HistoryPage() {
     const [searchTerm, setSearchTerm] = useState("")
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        loadHistory()
-    }, [])
-
     const loadHistory = async () => {
         setLoading(true)
         try {
@@ -67,10 +63,14 @@ export default function HistoryPage() {
             await window.api.clearHistory()
             setHistory([])
             toast.success("History cleared.")
-        } catch (err) {
+        } catch {
             toast.error("Failed to clear history.")
         }
     }
+
+    useEffect(() => {
+        loadHistory()
+    }, [])
 
     const filtered = history.filter(item =>
         !searchTerm ||

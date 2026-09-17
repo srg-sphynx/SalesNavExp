@@ -8,10 +8,6 @@ export default function FilesPage() {
     const [files, setFiles] = useState([])
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        loadFiles()
-    }, [])
-
     const loadFiles = async () => {
         setLoading(true)
         try {
@@ -24,6 +20,10 @@ export default function FilesPage() {
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        loadFiles()
+    }, [])
 
     const formatSize = (bytes) => {
         if (!bytes) return ""
@@ -72,7 +72,7 @@ export default function FilesPage() {
                             <div className="divide-y">
                                 {files.map((file, index) => (
                                     <div
-                                        key={index}
+                                        key={file.path || index}
                                         className="flex items-center justify-between py-3 px-2 hover:bg-muted/50 rounded-lg cursor-pointer transition-colors"
                                         onClick={() => safeOpenFile(file.path || file.filepath)}
                                     >

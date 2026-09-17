@@ -22,13 +22,6 @@ function BrowserIcon({ id, className }) {
                 <path d="M12 8H3.3A10 10 0 0 1 20.7 8" stroke="#EA4335" strokeWidth="2.5" fill="none" />
             </svg>
         ),
-        firefox: (
-            <svg viewBox="0 0 24 24" className={className}>
-                <circle cx="12" cy="12" r="10" fill="#FF6611" opacity="0.15" />
-                <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" fill="#FF6611" />
-                <path d="M16 8c-1-1.5-3-2-4-2-2.5 0-5 2-5 5 0 4 3 6 5 6s5-2 5-5c0-2-.5-3-.5-3l-3 1.5 1.5 1.5-2 1.5" fill="#FF9900" />
-            </svg>
-        ),
         brave: (
             <svg viewBox="0 0 24 24" className={className}>
                 <path d="M12 2L4 6v5c0 4.5 3.4 8.7 8 10 4.6-1.3 8-5.5 8-10V6l-8-4z" fill="#FB542B" />
@@ -47,21 +40,18 @@ function BrowserIcon({ id, className }) {
 
 export default function ScrapePage() {
     const { scrapeState, startScrape, stopScrape, resetScrape, goToStep } = useScrape()
-    const { step, progress, leadsScraped, speed, currentLead, maxLeads, listName, url, result, error, active } = scrapeState
+    const { step, progress, leadsScraped, speed, skipped, currentLead, maxLeads, listName, url, result, error, active } = scrapeState
 
     const [form, setForm] = useState({ url: url || "", listName: listName || "", maxLeads: maxLeads || 200 })
     const [uploading, setUploading] = useState(false)
-    const [driveStatus, setDriveStatus] = useState(null)
+    const [uploadedPath, setUploadedPath] = useState(null)
+    const uploaded = Boolean(result?.filepath) && uploadedPath === result.filepath
 
     // Browser detection state
     const [browsers, setBrowsers] = useState([])
     const [browsersLoading, setBrowsersLoading] = useState(false)
     const [selectedBrowser, setSelectedBrowser] = useState(null)
     const [browserLaunching, setBrowserLaunching] = useState(false)
-
-    useEffect(() => {
-        if (step === 1) detectBrowsers()
-    }, [step])
 
     const detectBrowsers = async () => {
         setBrowsersLoading(true)
@@ -71,7 +61,7 @@ export default function ScrapePage() {
             // Auto-select first available
             const first = (list || []).find(b => b.available)
             if (first) setSelectedBrowser(first.id)
-        } catch (err) {
+        } catch {
             toast.error("Could not detect browsers.")
         } finally {
             setBrowsersLoading(false)
@@ -85,11 +75,17 @@ export default function ScrapePage() {
         }
         setBrowserLaunching(true)
         try {
-            await window.api.launchBrowser({ browserType: selectedBrowser })
+            const res = await window.api.launchBrowser({ browserType: selectedBrowser })
+            if (!res?.success) {
+                toast.error(res?.error || "Failed to launch browser.")
+                return
+            }
             goToStep(2)
             const name = browsers.find(b => b.id === selectedBrowser)?.name || selectedBrowser
-            toast.success(`${name} launched — navigate to your Sales Navigator list.`)
-        } catch (err) {
+            toast.success(res.reused
+                ? `Connected to the open ${name} window — navigate to your Sales Navigator list.`
+                : `${name} launched — navigate to your Sales Navigator list.`)
+        } catch {
             toast.error("Failed to launch browser.")
         } finally {
             setBrowserLaunching(false)
@@ -108,23 +104,36 @@ export default function ScrapePage() {
     const handleDriveUpload = async () => {
         if (!result?.filepath) return
         setUploading(true)
-        setDriveStatus(null)
         try {
             const res = await window.api.driveUpload(result.filepath)
             if (res.success) {
-                setDriveStatus('success')
+                setUploadedPath(result.filepath)
                 toast.success("Uploaded to Google Drive!")
             } else {
-                setDriveStatus('error')
                 toast.error("Drive upload failed: " + (res.error || "Unknown error"))
             }
         } catch (err) {
-            setDriveStatus('error')
             toast.error("Drive upload error: " + (err?.message || "Unknown"))
         } finally {
             setUploading(false)
         }
     }
+
+    useEffect(() => {
+        if (step === 1) detectBrowsers()
+    }, [step])
+
+    // Default the lead limit to the value from Settings for a fresh scrape
+    useEffect(() => {
+        if (active || listName || url) return
+        window.api.getSettings()
+            .then(settings => {
+                if (settings?.maxLeadsPerScrape) {
+                    setForm(f => ({ ...f, maxLeads: settings.maxLeadsPerScrape }))
+                }
+            })
+            .catch(() => { })
+    }, [active, listName, url])
 
     const stepLabels = ["Launch Browser", "Configure", "Scraping", "Complete"]
 
@@ -169,7 +178,7 @@ export default function ScrapePage() {
                     {/* Error banner */}
                     {error && (
                         <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm">
-                            ❌ {error}
+                            {error}
                         </div>
                     )}
 
@@ -222,7 +231,7 @@ export default function ScrapePage() {
                                         </div>
 
                                         <p className="text-xs text-muted-foreground text-center">
-                                            The browser will open with remote debugging enabled on port 9222.
+                                            Opens a separate browser profile with remote debugging on port 9222. Your LinkedIn login is remembered between sessions.
                                         </p>
 
                                         <div className="flex gap-3">
@@ -334,6 +343,12 @@ export default function ScrapePage() {
                                     </div>
                                 </div>
 
+                                {skipped > 0 && (
+                                    <p className="text-xs text-center text-amber-600">
+                                        {skipped} lead{skipped === 1 ? "" : "s"} skipped due to errors
+                                    </p>
+                                )}
+
                                 <Button variant="destructive" className="w-full" onClick={handleStopScrape}>
                                     <Square className="w-4 h-4 mr-2" /> Stop & Save
                                 </Button>
@@ -346,14 +361,14 @@ export default function ScrapePage() {
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-green-600">
-                                    <CheckCircle className="w-5 h-5" /> Scraping Complete
+                                    <CheckCircle className="w-5 h-5" /> {result?.stopped ? "Partial Results Saved" : "Scraping Complete"}
                                 </CardTitle>
                                 <CardDescription>Your leads have been saved to a CSV file.</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="p-5 bg-green-500/10 border border-green-500/20 rounded-lg text-center">
-                                    <p className="text-3xl font-bold text-green-600">{result?.totalLeads || leadsScraped || 0}</p>
-                                    <p className="text-sm text-green-600 mt-1">Leads scraped successfully</p>
+                                    <p className="text-3xl font-bold text-green-600">{result?.totalLeads ?? leadsScraped ?? 0}</p>
+                                    <p className="text-sm text-green-600 mt-1">{result?.stopped ? "Leads saved before the scrape ended" : "Leads scraped successfully"}</p>
                                 </div>
 
                                 <div className="flex gap-3">
@@ -364,9 +379,9 @@ export default function ScrapePage() {
                                     </Button>
                                     <Button className="flex-1" variant="outline"
                                         onClick={handleDriveUpload}
-                                        disabled={uploading || !result?.filepath}>
+                                        disabled={uploading || uploaded || !result?.filepath}>
                                         <HardDrive className="w-4 h-4 mr-2" />
-                                        {uploading ? "Uploading..." : driveStatus === "success" ? "✓ Uploaded" : "Save to Drive"}
+                                        {uploading ? "Uploading..." : uploaded ? "Uploaded" : "Save to Drive"}
                                     </Button>
                                 </div>
 

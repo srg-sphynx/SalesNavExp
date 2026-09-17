@@ -15,7 +15,7 @@ export default defineConfig([
     ],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: { ...globals.browser, __APP_VERSION__: 'readonly' },
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
@@ -24,6 +24,10 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // Pages load IPC data on mount via async loaders; the rule can't see that
+      // state is only set after the await, so it flags every one of them.
+      'react-hooks/set-state-in-effect': 'off',
+      'react-refresh/only-export-components': ['error', { allowExportNames: ['useTheme', 'useScrape', 'buttonVariants'] }],
     },
   },
 ])

@@ -6,9 +6,9 @@
 
 ### A powerful macOS desktop app for extracting leads from LinkedIn Sales Navigator
 
-[![Version](https://img.shields.io/badge/version-3.1.0-blue?style=flat-square)](https://github.com/srg-sphynx/SalesNavExp/releases)
+[![Version](https://img.shields.io/badge/version-3.3.0-blue?style=flat-square)](https://github.com/srg-sphynx/SalesNavExp/releases)
 [![Platform](https://img.shields.io/badge/platform-macOS%20Apple%20Silicon-black?style=flat-square&logo=apple)](https://github.com/srg-sphynx/SalesNavExp/releases)
-[![Built with Electron](https://img.shields.io/badge/built%20with-Electron%2028-47848F?style=flat-square&logo=electron)](https://electronjs.org)
+[![Built with Electron](https://img.shields.io/badge/built%20with-Electron%2044-47848F?style=flat-square&logo=electron)](https://electronjs.org)
 [![Built with Antigravity](https://img.shields.io/badge/AI-Antigravity%20%2B%20Claude%20Sonnet%204.5-blueviolet?style=flat-square)](https://github.com/srg-sphynx/SalesNavExp)
 
 </div>
@@ -38,16 +38,16 @@
 <td width="50%" valign="top">
 
 ### 🖥️ Native macOS Experience
-- Vibrancy + blur effects — feels native on Mac
+- Opens instantly in your macOS light or dark appearance
 - Traffic light window controls
 - System-aware dark/light mode
 - titlebar hidden-inset style (no chrome border)
 - Sidebar + main content layout familiar to macOS users
 
 ### ⚡ Smart Scraping Engine
-- Connects to your **Chrome, Firefox, Brave, or Edge** browser via CDP (remote debugging)
+- Connects to **Chrome, Brave, Edge, or Chromium** via CDP (remote debugging)
 - Scrapes LinkedIn Sales Navigator search result pages
-- Extracts **Name + Profile URL** with high precision
+- Extracts **Name, Title, Company, Location + Profile URL**
 - Human-like delays between leads (configurable 500ms–10s)
 - Real-time progress with leads/min speed indicator
 - **Stop & Save** at any point — partial results are never lost
@@ -55,10 +55,11 @@
 </td>
 <td width="50%" valign="top">
 
-### 🌐 Multi-Browser Support *(V3.1)*
+### 🌐 Multi-Browser Support
 - Auto-detects installed browsers on your system
-- Supports **Google Chrome**, **Firefox**, **Brave**, **Microsoft Edge**
-- Each browser gets its own isolated profile for clean sessions
+- Supports **Google Chrome**, **Brave**, **Microsoft Edge**, **Chromium** (in `/Applications` or `~/Applications`)
+- Each browser gets its own isolated profile — your LinkedIn login is remembered
+- Reuses the already-open debug browser instead of relaunching it
 - One-click launch into LinkedIn Sales Navigator
 
 ### 📊 Analytics Dashboard
@@ -78,14 +79,15 @@
 - All scrapes saved as clean, properly-formatted **CSV** files
 - Download folder organized under `LinkedIn Scraper/`
 - Full scrape history with timestamps and lead counts
-- Sessions grouped by **Today / Yesterday / date** *(V3.1)*
-- **Clear History** with confirmation dialog *(V3.1)*
-- **File-missing detection** — shows badge if CSV was moved/deleted *(V3.1)*
+- Sessions grouped by **Today / Yesterday / date**
+- **Clear History** with confirmation dialog
+- **File-missing detection** — shows badge if CSV was moved/deleted
 - One-click reveal in Finder
 
 ### ☁️ Google Drive Integration
 - Direct upload to Google Drive after each scrape
-- OAuth2 authentication with your Google account
+- OAuth2 (PKCE) sign-in with your Google account
+- Tokens encrypted in your **macOS Keychain**
 - Requires `credentials.json` from Google Cloud Console
 
 </td>
@@ -100,7 +102,7 @@
 - Auto-open file in Finder after scrape
 - Light / Dark / System theme
 
-### ℹ️ About & Transparency *(V3.1)*
+### ℹ️ About & Transparency
 - About dialog shows: built by, AI model, system chip
 - Dynamic chip detection (e.g., **Apple M4 Pro · 16 GB**)
 - Version displayed in sidebar and about screen
@@ -146,35 +148,29 @@
 |---|---|
 | **macOS** | 12 Monterey or later (arm64 / Apple Silicon) |
 | **LinkedIn Sales Navigator** | Active subscription required |
-| **Browser** | Chrome, Firefox, Brave, or Edge installed |
-| **Node.js** | v18+ (only if building from source) |
+| **Browser** | Chrome, Brave, Edge, or Chromium installed (Firefox is not supported — it no longer offers CDP) |
+| **Node.js** | v22+ (only if building from source) |
 
 ---
 
 ### Option A — Download the DMG (Recommended)
 
 1. Go to [**Releases →**](https://github.com/srg-sphynx/SalesNavExp/releases)
-2. Download `LinkedIn Scraper-3.1.0-arm64.dmg`
+2. Download `LinkedIn Scraper-3.3.0-arm64.dmg`
 3. Open the DMG and drag the app to **Applications**
 
 > **⚠️ "App is damaged" or "unidentified developer" warning?**
 > This is expected — the app is **not notarized by Apple**. To bypass:
 
-**Option 1 — Right-click to open:**
+**Option 1 — System Settings (macOS 15 and later):**
 ```
-Right-click → Open → Open (in dialog)
+Open the app once → System Settings → Privacy & Security → "Open Anyway"
 ```
 
 **Option 2 — Remove quarantine via Terminal:**
 ```bash
 xattr -cr "/Applications/LinkedIn Scraper.app"
 ```
-
-**Option 3 — System Settings:**
-```
-System Settings → Privacy & Security → Allow apps from: Anywhere
-```
-(Then re-enable it after opening the app.)
 
 ---
 
@@ -194,11 +190,11 @@ npm install
 npm run build
 cd ..
 
-# 4. Start the app in dev mode
+# 4. Start the app
 npm start
 
-# 5. (Optional) Package as DMG
-npm run build:dmg
+# 5. (Optional) Package as DMG + zip (also rebuilds the frontend)
+npm run build
 ```
 
 ---
@@ -210,7 +206,7 @@ npm run build:dmg
 The app opens your browser in **remote debug mode** on port 9222. This lets the scraper connect to it without needing a browser extension.
 
 1. Open the app → go to **New Scrape**
-2. Select your preferred browser from the picker (Chrome, Firefox, Brave, Edge)
+2. Select your preferred browser from the picker (Chrome, Brave, Edge, Chromium)
 3. Click **Launch [Browser]**
 
 > The browser will open to `linkedin.com/sales`
@@ -260,10 +256,12 @@ When complete:
 ## 📄 CSV Output Format
 
 ```csv
-Name,LinkedIn Profile URL
-Jane Smith,https://www.linkedin.com/in/janesmith
-John Doe,https://www.linkedin.com/in/johndoe
+Name,Title,Company,Location,LinkedIn Profile URL
+Jane Smith,VP Sales,"Acme, Inc.","San Francisco, CA, United States",https://www.linkedin.com/in/janesmith
+John Doe,Founder,Nimbus,"Berlin, Germany",https://www.linkedin.com/in/johndoe
 ```
+
+Files are UTF-8 with a BOM, so accented names open correctly in Excel.
 
 Files are saved to `~/Downloads/LinkedIn Scraper/` by default with a timestamp in the filename:
 ```
@@ -281,10 +279,9 @@ To enable one-click Drive uploads:
 3. Enable the **Google Drive API**
 4. Create **OAuth 2.0 credentials** for a "Desktop app"
 5. Download the `credentials.json` file
-6. Place the file in the app bundle:
+6. Place the file in the app's data folder (survives app updates):
    ```
-   Right-click LinkedIn Scraper.app → Show Package Contents
-   → Contents/ → paste credentials.json here
+   ~/Library/Application Support/LinkedIn Scraper/credentials.json
    ```
 7. In the app, go to **Settings → Integrations → Connect Google Drive**
 8. Complete the browser-based OAuth flow
@@ -298,7 +295,7 @@ SalesNavExp/
 ├── main.js              # Electron main process — all IPC handlers, browser launch, file I/O
 ├── preload.js           # Context bridge — secure renderer ↔ main API
 ├── lib/
-│   ├── scraper.js       # Playwright-based scraping engine (CDP connect)
+│   ├── scraper.js       # Scraping engine (playwright-core over CDP)
 │   └── googleDrive.js   # Google Drive OAuth2 + upload
 ├── frontend/            # React + Vite + Tailwind frontend
 │   └── src/
@@ -321,12 +318,12 @@ SalesNavExp/
 **Stack:**
 | Layer | Technology |
 |---|---|
-| Shell | Electron 28 |
-| Frontend | React 19 + Vite 7 |
+| Shell | Electron 44 |
+| Frontend | React 19 + Vite 8 |
 | Styling | Tailwind CSS 3 + shadcn/ui |
 | Charts | Recharts |
-| Scraping | Playwright (CDP) |
-| Cloud | Google Drive API v3 |
+| Scraping | playwright-core (CDP) |
+| Cloud | Google Drive API v3 (`@googleapis/drive`) + Keychain token storage |
 | Packaging | electron-builder |
 
 ---
@@ -340,6 +337,7 @@ SalesNavExp/
 | App says "File missing" in History | The CSV was moved or deleted from disk — history record remains |
 | Browser doesn't appear in the picker | Browser is not installed at the standard macOS Applications path |
 | Google Drive connection timeout | Re-check `credentials.json` placement and try reconnecting |
+| `"Port 9222 is already used by another browser"` | Quit any other browser you started with remote debugging, then launch again |
 | `"App is damaged"` on launch | Run `xattr -cr "/Applications/LinkedIn Scraper.app"` in Terminal |
 
 ---
@@ -380,6 +378,6 @@ This project is released for **personal, non-commercial use only**. No formal OS
 
 **⭐ Star this repo if you found it useful — it keeps the project alive!**
 
-*Made with ❤️ and lots of ☕ — SalesNavExp v3.1.0*
+*Made with ❤️ and lots of ☕ — SalesNavExp v3.3.0*
 
 </div>
